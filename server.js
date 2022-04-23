@@ -9,6 +9,10 @@ app.use(express.urlencoded({ extended: true }));
 //pares incoming JSON data
 app.use(express.json());
 
+
+//connects all files from '/public'
+app.use(express.static('public'));
+
 const { animals } = require('./data/animals');
 
 
@@ -113,6 +117,26 @@ app.post('/api/animals', (req, res) => {
     const animal = createNewAnimal(req.body, animals);
     res.json(animal);
   }
+});
+
+//route to homepage html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+//route to animals page html
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+//route to zookeepers page html
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+//route to path that does not exist (such as '/about') and will be rerouted to the homepage
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.listen(PORT, () => {
